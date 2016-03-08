@@ -16,15 +16,15 @@ ext.config = parsedConfig
 
 buildscript {
     repositories {
-        mavenLocal()
-    	/*maven {
-    		url binaryRepositoryJCenterLocalUrl
+        //mavenLocal()
+    	maven {
+    		url jcenterLocalRepoPath
     		credentials {
-    			username = binaryRepositoryUserName
-    			password = binaryRepositoryPassword
+    			username = repoUserName
+    			password = repoPassword
     		}
     	}
-        mavenCentral()*/
+        mavenCentral()
     }
 
     dependencies {
@@ -42,7 +42,7 @@ gradle.projectsEvaluated {
 
         cargo {
             containerId = config.server.containerId
-        port = config.server.port.toInteger()
+            port = config.server.port.toInteger()
     
             remote {
                 hostname = config.server.hostname

@@ -1,29 +1,30 @@
-	task wrapper(type: Wrapper) {
+task wrapper(type: Wrapper) {
 	gradleVersion = '2.6'
-	}
+}
 
-	buildscript {
-		repositories {
-			mavenLocal()
-			//mavenCentral()
-		}
-		dependencies {
-			classpath 'com.github.kulya:jmeter-gradle-plugin:1.3.2-2.6'
-		}
+buildscript {
+	repositories {
+		//mavenLocal()
+		mavenCentral()
 	}
-	apply plugin:'jmeter'
-	def performanceTestReportDir = file("$buildDir/reports/tests")
-	jmeterRun.configure {
+	dependencies {
+		classpath 'com.github.kulya:jmeter-gradle-plugin:1.3.2-2.6'
+	}
+}
+
+apply plugin:'jmeter'
+def performanceTestReportDir = file("$buildDir/reports/tests")
+jmeterRun.configure {
 	jmeterTestFiles = [ file("$rootDir/web/src/test-performance/resources/com/wipro/test/SpringQPerformanceTestPlan.jmx")]
 	jmeterPropertyFile = file("$rootDir/web/src/test-performance/resources/com/wipro/test/jmeter.properties")
 	// To get the host , port , path list values in jmx file use the ${__P(host)} , ${__P(port)}, ${__P(path)} in the domain , port and path in jmx file.
 	// remove proxy settings in jmx file
 	jmeterUserProperties = ["host="+config.server.hostname,"port="+config.server.port,"path="+appName]
 	reportDir = performanceTestReportDir
-	}
+}
 
 
-	project(':web') {
+project(':web') {
 
 	apply plugin: 'java'
 	apply plugin: 'war'
@@ -36,26 +37,26 @@
 
 
 	repositories {
-		mavenLocal()
-		/*mavenCentral()
+		//mavenLocal()
+		mavenCentral()
 		maven {
-			url binaryRepositoryJCenterLocalUrl
+			url jcenterLocalRepoPath
 			credentials {
-				username = binaryRepositoryUserName
-				password = binaryRepositoryPassword
+				username = repoUserName
+				password = repoPassword
 			}
 		}
 		
 		maven {
-			url binaryRepositoryMavenLocalUrl
+			url mavenLocalRepoPath
 			credentials {
-				username = binaryRepositoryUserName
-				password = binaryRepositoryPassword
+				username = repoUserName
+				password = repoPassword
 			}
 		}
 		jcenter()
 
-		maven { url "http://repo.maven.apache.org/maven2" }*/
+		maven { url "http://repo.maven.apache.org/maven2" }
 	}
 
 	dependencies {
@@ -196,9 +197,11 @@
 			url releasesRepoPath 
 		}
 	}
+
 	configurations {
 		downloadWar
 	}
+
 	println "$mavenGroupId:$appName:$project.version@war"
 	dependencies {		
 		downloadWar ("$mavenGroupId:$appName:$project.version@war"){ 
@@ -212,6 +215,7 @@
 
 	task downloadBinaryArchive(type: Copy) {		
 		from configurations.downloadWar
+		// Applicable to linux directory structure
 		into "$buildDir/libs"		
 	}
 
@@ -256,10 +260,9 @@
 		classpath = sourceSets.functionalTest.runtimeClasspath
 		systemProperty 'url', "$config.server.hostname:$config.server.port/$appName/"
 		useTestNG(){
-		suites 'src/test-functional/resources/testing.xml'
+			suites 'src/test-functional/resources/testing.xml'
+		}
 	}
-
-}
 
 }
 
