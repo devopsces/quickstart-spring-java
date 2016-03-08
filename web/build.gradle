@@ -161,7 +161,8 @@ project(':web') {
 
 				from components.web
 			}
-			functionalReports(MavenPublication){
+			// Commented as it will not work on linux
+			/*functionalReports(MavenPublication){
 				groupId mavenGroupId
 				artifactId "FunctionalReports"
 				version version
@@ -169,7 +170,7 @@ project(':web') {
 				artifact(myZip) {
 			       classifier "reports"
 		       	}
-	       	}
+	       	}*/
 		 	performanceReports(MavenPublication){
 		        groupId mavenGroupId
 				artifactId "PerformanceReports"
@@ -255,13 +256,14 @@ project(':web') {
 	}
 
 	//Functional Test
+	// Commented as it will not work on linux
 	task functionalTest(type: Test) {
-		testClassesDir = sourceSets.functionalTest.output.classesDir
+		/*testClassesDir = sourceSets.functionalTest.output.classesDir
 		classpath = sourceSets.functionalTest.runtimeClasspath
 		systemProperty 'url', "$config.server.hostname:$config.server.port/$appName/"
 		useTestNG(){
 			suites 'src/test-functional/resources/testing.xml'
-		}
+		}*/
 	}
 
 }
